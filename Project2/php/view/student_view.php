@@ -4,6 +4,8 @@
 <html>
 <head>
 <title>View Appointments</title>
+	<link rel='stylesheet' type='text/css' href='../../html/standard.css'/>
+   	<link rel='icon' type='image/png' href='../../html/standard.css'/>
 <style>
 table, th, td {
      border: 1px solid black;
@@ -20,6 +22,10 @@ top:8px;
 </head>
 <body>
 
+<div id="background">
+<left><div id="wrapper">
+<h1>CMNS Advising</h1>
+	
 <?php
 require_once('../mysql_connect.php');
 session_start();
@@ -112,5 +118,12 @@ else
   }
 ?>
 
+	<h3 style='color: #FF0000;'>Copyright umbc.edu</h3>
+
+</div>
+</left>
+</div>
+</body>
+</html>
 
 <?php include('../../html/footer.html'); ?>
