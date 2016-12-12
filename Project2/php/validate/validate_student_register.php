@@ -17,8 +17,7 @@ $row = mysql_fetch_row($rs);
 
 //By default no errors
 $errors = FALSE;
-$_SESSION["error_message"] = "GARBAGE";
-
+$_SESSION["error_message"] = "ERRORS: <br>";
   $major = $_POST['major'];
   $firstName = $_POST['firstName'];
   $lastName = $_POST['lastName'];
@@ -40,7 +39,7 @@ if($num_rows > 0)
 if ($email == "") 
 {
   $errors = TRUE;
-  $_SESSION["error_message"] = "Email field can't be blank.<br>";
+  $_SESSION["error_message"] .= "Email field can't be blank.<br>";
 } 
 
 //Major left blank check
@@ -52,7 +51,7 @@ if ($major == "")
 if ($major == "Other")
 {
   //set a variable and store the other error message in it
-  $other_print .= "PRINT SOME MESSAGE ABOUT BEING AN OTHER.<br>";
+  $_SESSION["other_message"] = "PRINT SOME MESSAGE ABOUT BEING AN OTHER.<br>";
 
 }
 // First name left blank check
@@ -95,7 +94,7 @@ if ($errors != TRUE)
   //No errors - GOOD - Insert into database
 
   $hashedPass = md5($password);
-
+  $_SESSION["email"] = ($_POST['email']);
 
 
       
@@ -108,7 +107,7 @@ if ($errors != TRUE)
 }
 else
 {
-  // Go to the register_student.html file
-  header('Location: ../../html/forms/register_student.html');
+  // Go to the register_student.php file
+  header('Location: ../../html/forms/register_student.php');
 }
 ?>

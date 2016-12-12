@@ -22,8 +22,6 @@ $date = $_POST['date'];
 $time = $_POST['time'];
 $location = $_POST['location'];
 $group = $_POST['group'];
-$sessionLeader = $_POST['leader'];
-$maxAttend = $_POST['maxAttend'];
 
 // Create a date for today 
 $today = date_create();
@@ -48,13 +46,19 @@ if ($date == "")
   $error_message .= "Date field can't be blank.<br>";
 }
 
-//Date already passed 
+//Date already past 
 if($date <= $todayStr && $time <= $currTime && $error_message == "")
 {
   $errors = True;
   $error_message .= "You may not schedule appointments in the past.<br>";
 }
 
+//Location left blank check
+if ($location == "") 
+{
+  $errors = True;
+  $error_message .= "Location field can't be blank.<br>";
+}
 
 // If there are errors 
 if(!$errors)
@@ -65,10 +69,12 @@ if(!$errors)
   $rs = mysql_query($sql, $conn);
   $fullName = mysql_fetch_array($rs)['fullName'];
 
+  echo $sql;
+
   // Insert a new appointment into the appointments table
   $sql =
-      "INSERT INTO appointments (Date, Time, Location, isGroup, Advisor, AdvisorUsername) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
-  $formatted = sprintf($sql, $date, $time, $location, $group, $fullName, $email,$sessionLeader, $maxAttend);
+      "INSERT INTO appointments (Date, Time, Location, isGroup, Advisor, AdvisorUsername) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')";
+  $formatted = sprintf($sql, $date, $time, $location, $group, $fullName, $email);
   $rs = mysql_query($formatted, $conn);
 
   // Go back to the advisor_view.php 

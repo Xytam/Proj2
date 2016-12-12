@@ -14,6 +14,7 @@ if($_SESSION['appt'])
       unset($_SESSION['appt']);
 }
 session_destroy(); 
+session_start();
 ?>
 
 <html lang="en">
@@ -40,7 +41,7 @@ session_destroy();
      
      </form>
     
-  <form method=post action="register_student.html">
+  <form method=post action="register_student.php">
      <input type=submit class="button large go" value="Student"/>
      </form>
 
