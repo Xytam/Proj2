@@ -4,6 +4,8 @@
 <html>
 <head>
 <title>Appointments</title>
+  <link rel='stylesheet' type='text/css' href='../html/standard.css'/>
+  <link rel='icon' type='image/png' href='../html/standard.css'/>
 <style>
 table, th, td {
 border: 1px solid black;
@@ -20,7 +22,28 @@ top:8px;
 }
 </style>
 </head>
+  
 <body>
+<div id="background">
+<left><div id="wrapper">
+<h1>CMNS Advising</h1>
+
+<table border="0">
+<tr>
+<form action="processAdvisorHomepage.php" method="post" name="Home">
+  <td><input type="submit" name="next" class="button main selection" value="Schedule appo\
+intment"></td>
+
+  <td><input type="submit" name="next" class="button main selection" value="Print schedul\
+e"></td>
+
+  <td><input type="submit" name="next" class="button main selection" value="Search appoin\
+tments"></td>
+</form>
+</tr>
+</table>
+
+  
 <?php
 
 include ('mysql_connect.php');
@@ -87,5 +110,11 @@ while ($appt = mysql_fetch_array($rs))
 }
 ?>
 </table>
+  
+  <h3 style='color: #FF0000;'>Copyright umbc.edu</h3>
+
+</div>
+</left>
+</div>
 </body>
 </html>
