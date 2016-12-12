@@ -2,7 +2,7 @@
 //This file will check if the student logging in is entering a valid value 
 
 <?php
-session_start();
+  //session_start();
 
 require_once('../mysql_connect.php');
 
@@ -14,12 +14,10 @@ $truePassword = md5($password);
 $sql = "SELECT * FROM `students` WHERE `Email` = '$email' AND `Password` = '$truePassword'";
 $rs = mysql_query($sql, $conn);
 $name_found = False;
-$_SESSION["error_message"] = "";
+$_SESSION["error_message"] = "???";
 
 //count of how many many rows are returned when query is run 
 $num_rows = mysql_num_rows($rs);
-
-echo "should print";
 
 //if only one match, password correct
 if($num_rows == 1){
@@ -29,7 +27,6 @@ if($num_rows == 1){
 // This is the pass case
 if ($name_found) 
 {
-  session_start();
   $_SESSION['username'] = $email;
 
   // go to the student_view.php page
