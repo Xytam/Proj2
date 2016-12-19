@@ -5,7 +5,7 @@
 <head>
 <title>Appointments</title>
   <link rel='stylesheet' type='text/css' href='../html/standard.css'/>
-  <link rel='icon' type='image/png' href='../html/standard.css'/>
+  <link rel='icon' type='image/png' href='../html/corner.png'/>
 <style>
 table, th, td {
 border: 1px solid black;
