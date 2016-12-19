@@ -65,7 +65,7 @@ if(mysql_fetch_array($rs))
     if (!is_null(($studentApptNum))) {
       //print a table containing info about the student's appointment
 ?>
-<table>
+<center><table>
 <tr>
 <th>Date</th>
 <th>Time</th>
@@ -98,6 +98,8 @@ if(mysql_fetch_array($rs))
         echo '</form>';
     }
     ?>
+	
+	</table></center>
 
 <?php } //handles the case if no advisors have made an appointment
 else {
