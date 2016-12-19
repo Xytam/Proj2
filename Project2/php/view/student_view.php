@@ -5,7 +5,7 @@
 <head>
     <title>View Appointments</title>
     <link rel='stylesheet' type='text/css' href='../../html/standard.css'/>
-    <link rel='icon' type='image/png' href='../../html/standard.css'/>
+    <link rel='icon' type='image/png' href='../../html/corner.png'/>
     <style>
         table, th, td {
             border: 1px solid black;
@@ -98,8 +98,7 @@ if(mysql_fetch_array($rs))
         echo '</form>';
     }
     ?>
-	
-	</table></center>
+</table></center>
 
 <?php } //handles the case if no advisors have made an appointment
 else {
