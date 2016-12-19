@@ -1,15 +1,16 @@
 <!-- validate_appointment.php -->
 <!-- This file will make sure that an advisor does not input an invalid appointment -->
-
+<html>
+<head>
 <?php
 
 require_once('../mysql_connect.php');
 session_start();
 
-$email = $_SESSION['username'];
+$email = $_SESSION['email'];
 
 // Creates the query to get the information from the appointments database where the username is equal to the current session username
-$sql = "SELECT Date, Time FROM appointments WHERE `AdvisorUsername` = '$email'";
+$sql = "SELECT * FROM appointments WHERE `AdvisorEmail` = '$email'";
 $rs = mysql_query($sql, $conn);
 $errors = False;
 $error_message = "";
@@ -21,7 +22,9 @@ date_default_timezone_set('America/New_York');
 $date = $_POST['date'];
 $time = $_POST['time'];
 $location = $_POST['location'];
-$group = $_POST['group'];
+$leader = $_POST['leader'];
+$maxAttendees = $_POST['maxAttend'];
+$group = ($maxAttendees > 1) ? 1 : 0;
 
 // Create a date for today 
 $today = date_create();
@@ -29,9 +32,10 @@ $todayStr = date_format($today, 'Y-m-d');
 $currTime = date_format($today, 'G:i');
 
 //Time not already scheduled check
-while($row = mysql_fetch_array($rs)) 
+while($row = mysql_fetch_assoc($rs))
 {
-  if ($time == $row['Time'] && $date == $row['Date'])
+    echo(var_dump($row));
+  if (($time == $row['Time'] && $date == $row['Date']) && !(isset($_POST['ID']) && $row['id'] == $_POST['ID']))
   {
     //Match found - BAD - there is an error
     $errors = True;
@@ -63,18 +67,43 @@ if ($location == "")
 // If there are errors 
 if(!$errors)
 {
-  // Get the information from the advisors database for the fullName
-  // This will be used in the next query 
-  $sql = "SELECT fullName FROM advisors WHERE `Email` = '$email'";
-  $rs = mysql_query($sql, $conn);
-  $fullName = mysql_fetch_array($rs)['fullName'];
+    if(isset($_POST['ID'])){
+        $escaped_id = ($_POST['ID']);
 
-  echo $sql;
+        // Notify students with this appointment
+        $sql = "UPDATE students SET appointmentChanged=1 WHERE Appt='$escaped_id'";
+        mysql_query($sql, $conn);
 
-  // Insert a new appointment into the appointments table
-  $sql =
-      "INSERT INTO appointments (Date, Time, Location, isGroup, Advisor, AdvisorUsername) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')";
-  $formatted = sprintf($sql, $date, $time, $location, $group, $fullName, $email);
+        // If the appointment's max attendees changed, make sure there are not
+        // too many students by removing some if needed
+        $appt = mysql_fetch_array(mysql_query("SELECT * from appointments where id=".$escaped_id, $conn));
+        $students = mysql_query("SELECT * FROM students WHERE Appt=".$appt["id"]);
+        while($appt['NumStudents'] > $appt['MaxAttendees']){
+            $student = mysql_fetch_array($students);
+            mysql_query("UPDATE students SET Appt = NULL, appointmentChanged=1 WHERE id=".$student['id'], $conn);
+            mysql_query("UPDATE appointments SET NumStudents=NumStudents-1 WHERE id=".$appt['id'], $conn);
+            $appt = mysql_fetch_array(mysql_query("SELECT * from appointments where id=".$escaped_id, $conn));
+        }
+
+        // Modify an existing appointment
+        $sql = "UPDATE appointments
+                SET `Date`='%s', 
+                    `Time`='%s', 
+                    Location='%s', 
+                    isGroup='%s', 
+                    SessionLeader='%s', 
+                    AdvisorEmail='%s', 
+                    MaxAttendees='%s' 
+                    WHERE id='$escaped_id'";
+    }
+    else {
+        // Insert a new appointment into the appointments table
+        $sql = "INSERT INTO appointments 
+                (`Date`, `Time`, Location, isGroup, SessionLeader, AdvisorEmail, MaxAttendees) 
+                VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')";
+    }
+  $formatted = sprintf($sql, $date, $time, $location, $group, $leader, $email, $maxAttendees);
+
   $rs = mysql_query($formatted, $conn);
 
   // Go back to the advisor_view.php 
@@ -82,7 +111,10 @@ if(!$errors)
 }
 else
 {
+    $_SESSION['appointmentError'] = $error_message;
   // Go to the error page for add appoinment 
-  require('../../html/error_forms/add_appointment_error.html');
+  require('../../html/forms/add_appointment.php');
 }
 ?>
+</head>
+</html>

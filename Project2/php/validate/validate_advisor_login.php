@@ -28,7 +28,7 @@ if($num_rows == 1){
 if ($name_found) 
 {
  
-  $_SESSION['username'] = $email;
+  $_SESSION['email'] = $email;
   header('Location:../../php/view/advisor_view.php');
 } 
 
@@ -47,7 +47,7 @@ else
   {
     $_SESSION['error_message'] = "Email or password not recognized.<br>";
   } 
-  
+
   header('Location: ../../html/forms/login_advisor.html');
 }
 
